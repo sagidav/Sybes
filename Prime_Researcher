@@ -1,28 +1,21 @@
-#!/usr/bin/env python2
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Mar 21 08:19:24 2022
-
-@author: danieldavidi
-"""
 import numpy as np
 
 def all_primes(num):
-    a= np.arange(3,num)
-    b = []
-    b=[3,5,7]
-    for i in range(3,num-3):
+    a= np.arange(7,num)
+    b = [2,3,5]
+    for i in range(1,num-7):
         if a[i] % 2 == 0 or a[i] % 3 == 0 or a[i] % 5 == 0:
             a[i] = 0
         else:
-            for j in range(6,num/2+1):
-                if a[i] % j == 0:
+            for j in range(7,int(num/2)+1):
+                if a[i] % j == 0 and a[i]-j !=0:
                     a[i] = 0
     for k in a:
         if k != 0:
             b.append(k)
     return b
 
+#print(all_primes(100))
 
 class prime:
     def __init__(self,num):
@@ -77,31 +70,59 @@ class num_to_factors:
     
     def __init__(self,num):
         a = []
-        a1 = np.sqrt((num+1)*100)
-        b1 = int(np.round(a1,0)+1)
-        c1 = all_primes(b1)
+        c1 = all_primes(num+1)
         
         for i in c1:
-            a.append((i,0))
+            a.append([i,0])
+        self.primes = a
+        
+        x = int(num)
+        c = []
+        while x != 1:
+            for j in range(len(a)):
+                if x % a[j][0] == 0:
+                    a[j][1] +=1
+                    x = x / a[j][0]
+                    pass
+        for j in range(len(a)):
+            if a[j][1] == 0:
+                pass
+            else:
+                c.append(a[j])
+        self.final = c
+        
+        d = '|'
+        for k in c:
+              d = d + str(k[0]) + 'X' + str(k[1]) + '|'
+        self.final_str = d
 
 def Board_all_numbers(num):
     
-    a1 = all_primes(100)
-    a = np.arange(1,num*100+1)
-    x = np.array(a)
-    x = x.reshape(10*num,10)
-    return x,a1
+    p1 = all_primes(100)
+    a=['']
+    b=[]
+    for i in range(1,101):
+        b.append([str(i)])
+    c = np.array(b,dtype=object)
+    
+    c = c.reshape(10,10)
+
+    
+    for j in range(10):
+        for k in range(10):
+            if int(c[j][k]) in p1 or int(c[j][k])==1 or int(c[j][k])==2 :
+                pass
+            else:
+                temp = int(c[j][k])
+                temp1 = num_to_factors(temp)
+                c[j][k] = temp1.final_str
+    
+    return c
+
 
 print (Board_all_numbers(10))
-        
+a1 = num_to_factors(998)
+print(a1.final,a1.final_str)
 
-        
-for i in c1:
-    a.append((i,0))
-    b.append(str(i) + 'X' + '0')
 
-#print(a,b)
-        
-a111 = np.arange(3,10,2)
-#print a111
-        
+
