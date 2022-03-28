@@ -15,7 +15,7 @@ def all_primes(num):
             b.append(k)
     return b
 
-#print(all_primes(100))
+print(all_primes(100))
 
 class prime:
     def __init__(self,num):
@@ -62,9 +62,16 @@ def Block_chain(order):
             
 
 #y = Block_chain(20)
-#y1 = Block(1)
-#y2 = y1.render()
-#print (y)
+y1 = Block(9)
+y2 = y1.render()
+print (y2)
+
+def block_of_2(order):
+    a = np.arange((order-1)*100+2,order*100+1,2)
+    b = np.array(a,dtype=object)
+    b = b.reshape(10,5)
+    return b
+print(block_of_2(9))
 
 class num_to_factors:
     
@@ -98,10 +105,10 @@ class num_to_factors:
 
 def Board_all_numbers(num):
     
-    p1 = all_primes(100)
+    p1 = all_primes(1000)
     a=['']
     b=[]
-    for i in range(1,101):
+    for i in range(((num-1)*100+1),(num*100+1)):
         b.append([str(i)])
     c = np.array(b,dtype=object)
     
@@ -120,8 +127,8 @@ def Board_all_numbers(num):
     return c
 
 
-print (Board_all_numbers(10))
-a1 = num_to_factors(998)
+#print (Board_all_numbers(4))
+a1 = num_to_factors(79)
 print(a1.final,a1.final_str)
 
 
