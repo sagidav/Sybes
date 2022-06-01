@@ -10,6 +10,7 @@ Created on Tue May 31 07:26:26 2022
    
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib import animation
 
 class Pixel:
     def __init__(self):
@@ -124,4 +125,6 @@ def Update(board1,board2):
 pixel_plot = plt.figure()
 pixel_plot.add_axes()
 plt.title("plot")
-pixel_plot = plt.imshow(fix1,cmap='Greens')
+#pixel_plot = plt.imshow(fix1,cmap='Greens')
+#anim = animation.FuncAnimation(fig,animate,init_func=init,frames=500,interval=20,blit=True)
+#anim.save('aa.htm',fps=100,writer='ffmpeg',extra_args=['-vcodec','libx264'])
