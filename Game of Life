@@ -1,3 +1,13 @@
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
+"""
+Created on Tue May 31 07:26:26 2022
+
+@author: danieldavidi
+"""
+
+
+   
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -30,13 +40,26 @@ def Draw_Board(N):
     c = np.array(b)
     return c
     
-Board = Draw_Board(10)
+Board = Draw_Board(100)
 a= Pixel()
 a.resurrect()
-Board[0][0]=a
+Board[4][3]=a
 print (Board)
-print(a)
-Iterated_Board = Draw_Board(10)
+#print(a)
+#Iterated_Board = Draw_Board(10)
+
+def fix(board):
+    k = np.zeros([100,100])
+    for i in range(100):
+        for j in range(100):
+            if board[i][j].status == 'Dead':
+                k[i][j] = 0
+            else:
+                k[i][j] = 1
+
+    return k
+
+fix1 = fix(Board)
 
 
 def Check_neighbors(board,a,b):
@@ -61,16 +84,18 @@ def Check_neighbors(board,a,b):
         if b == 0:
             d = a6.check_pulse() + a8.check_pulse() + a9.check_pulse()
         elif b == n:
-             d = a4.check_pulse() + a7.check_pulse() + a8.check_pulse()
+            d = a4.check_pulse() + a7.check_pulse() + a8.check_pulse()
         else:
             d = a4.check_pulse() + a6.check_pulse() + a7.check_pulse() + a8.check_pulse() + a9.check_pulse()
-    if a == n:
-         if b == 0:
+    elif a == n:
+        if b == 0:
             d = a2.check_pulse() + a3.check_pulse() + a6.check_pulse()
         elif b == n:
-             d = a1.check_pulse() + a2.check_pulse() + a4.check_pulse()
+            d = a1.check_pulse() + a2.check_pulse() + a4.check_pulse()
         else:
             d = a1.check_pulse() + a2.check_pulse() + a3.check_pulse() + a4.check_pulse() + a6.check_pulse()
+    else:
+        pass
     return d
   
     
@@ -93,3 +118,10 @@ def Update(board1,board2):
                     board2[i][j] = e
             else:
                 pass
+
+
+
+pixel_plot = plt.figure()
+pixel_plot.add_axes()
+plt.title("plot")
+pixel_plot = plt.imshow(fix1,cmap='Greens')
