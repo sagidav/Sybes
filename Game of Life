@@ -1,130 +1,53 @@
-#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 """
-Created on Tue May 31 07:26:26 2022
+Created on Tue May  2 11:14:58 2023
 
-@author: danieldavidi
+@author: Sagi.Davidi
 """
 
-
-   
+import random
+import time
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib import animation
 
-class Pixel:
-    def __init__(self):
-        self.status = 'Dead'
-        
-    def __repr__(self):
-        return self.status
-        
-    def check_pulse(self):  
-        if self.status == 'Alive':
-            return 1
-        return 0
-    
-    def kill(self): 
-        self.status = 'Dead'
-    
-    def resurrect(self):
-        self.status = 'Alive'
-        
+# Set up the initial configuration of the grid
+def initialize_grid(width, height, density):
+    grid = np.zeros((height, width))
+    for i in range(height):
+        for j in range(width):
+            if random.random() < density:
+                grid[i][j] = 1
+    return grid
 
-def Draw_Board(N):
-    a = []
-    for i in range(N):
-        a.append(Pixel())
-    b = []
-    for j in range(N):
-        b.append(a)
-    c = np.array(b)
-    return c
-    
-Board = Draw_Board(100)
-a= Pixel()
-a.resurrect()
-Board[4][3]=a
-print (Board)
-#print(a)
-#Iterated_Board = Draw_Board(10)
+# Compute the next generation of cells
+def compute_next_gen(grid):
+    height, width = grid.shape
+    new_grid = np.zeros((height, width))
+    for i in range(height):
+        for j in range(width):
+            # Count the number of live neighbors
+            neighbors = grid[max(0, i-1):min(i+2, height), max(0, j-1):min(j+2, width)]
+            num_neighbors = int(np.sum(neighbors)) - int(grid[i][j])
+            # Apply the Game of Life rules
+            if grid[i][j] == 1 and (num_neighbors == 2 or num_neighbors == 3):
+                new_grid[i][j] = 1
+            elif grid[i][j] == 0 and num_neighbors == 3:
+                new_grid[i][j] = 1
+    return new_grid
 
-def fix(board):
-    k = np.zeros([100,100])
-    for i in range(100):
-        for j in range(100):
-            if board[i][j].status == 'Dead':
-                k[i][j] = 0
-            else:
-                k[i][j] = 1
+# Display the grid
+def display_grid(grid):
+    plt.imshow(grid, cmap='binary')
+    plt.show()
 
-    return k
+# Main function to run the Game of Life
+def run_game_of_life(width, height, density, num_generations, display=True):
+    grid = initialize_grid(width, height, density)
+    for i in range(num_generations):
+        if display:
+            display_grid(grid)
+            time.sleep(0.2)
+        grid = compute_next_gen(grid)
 
-fix1 = fix(Board)
-
-
-def Check_neighbors(board,a,b):
-    
-    n = len(board)-1
-    d = 0
-    x1 = max(a,1)
-    x2 = min(a,n-1)
-    y1 = max(b,1)
-    y2 = min(b,n-1)
-    
-    a1 = board[x1-1][y1-1]
-    a2 = board[x1-1][b]
-    a3 = board[x2+1][y2+1]
-    a4 = board[a][y1-1]
-    a6 = board[a][y2+1]
-    a7 = board[x2+1][y1-1]
-    a8 = board[x2+1][b]
-    a9 = board[x2+1][y2+1]
-     
-    if a == 0:
-        if b == 0:
-            d = a6.check_pulse() + a8.check_pulse() + a9.check_pulse()
-        elif b == n:
-            d = a4.check_pulse() + a7.check_pulse() + a8.check_pulse()
-        else:
-            d = a4.check_pulse() + a6.check_pulse() + a7.check_pulse() + a8.check_pulse() + a9.check_pulse()
-    elif a == n:
-        if b == 0:
-            d = a2.check_pulse() + a3.check_pulse() + a6.check_pulse()
-        elif b == n:
-            d = a1.check_pulse() + a2.check_pulse() + a4.check_pulse()
-        else:
-            d = a1.check_pulse() + a2.check_pulse() + a3.check_pulse() + a4.check_pulse() + a6.check_pulse()
-    else:
-        pass
-    return d
-  
-    
-
-def Update(board1,board2):
-    e = Pixel()
-    e1 = e.reurrect()
-    for i in board1:
-        for j in i:
-            f = Check_neighbors(board1,i,j)
-            if board1[i][j] == 'Dead':
-                if f == 3:
-                    board2[i][j] = e1
-                else:
-                    pass
-            elif board1[i][j] == 'Alive':
-                if f == 2 or f == 3:
-                    pass
-                else: 
-                    board2[i][j] = e
-            else:
-                pass
-
-
-
-pixel_plot = plt.figure()
-pixel_plot.add_axes()
-plt.title("plot")
-#pixel_plot = plt.imshow(fix1,cmap='Greens')
-#anim = animation.FuncAnimation(fig,animate,init_func=init,frames=500,interval=20,blit=True)
-#anim.save('aa.htm',fps=100,writer='ffmpeg',extra_args=['-vcodec','libx264'])
+# Example usage
+run_game_of_life(50, 50, 0.1, 50)
